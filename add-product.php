@@ -1,3 +1,21 @@
+<?php
+
+
+require_once "./config.php";
+session_start();
+
+if(!empty($_SESSION['id'])){
+    header('location:index.php');
+}
+
+if(isset($_POST['submit'])){
+    $name = $_POST[]
+    $image_path
+    '$image'
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

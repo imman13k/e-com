@@ -1,3 +1,17 @@
+<?php
+
+
+require_once "./config.php";
+session_start();
+
+if(!empty($_SESSION['id'])){
+    header('location:index.php');
+}
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
