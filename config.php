@@ -3,7 +3,7 @@
 $server="localhost";
 $username="root";
 $password="";
-$db="e-com";
+$db="ecom";
 
 
 $link=new mysqli($server,$username,$password,$db);

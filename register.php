@@ -1,37 +1,43 @@
 <?php
 require_once "./config.php";
-if (isset($_POST['submit'])) {
+
+
+if(isset($_POST['submit'])) {
+
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $confirm_password = $_POST['confirmPassword'];
+    $confirmpassword = $_POST['confirmPassword'];
+    $email = $_POST['email'];
 
-    $select = "SELECT * FROM users WHERE username = '$username' ";
-
+    $select = "SELECT * FROM users WHERE username = '$username' OR email = '$email'";
     $checkUser = mysqli_query($link, $select);
 
-    if (mysqli_num_rows($checkUser) > 0) {
-        echo "<script>
-                alert('this username already exists')
-            </script>";
+    if(mysqli_num_rows($checkUser)>0) {
+       echo "<script>
+                alert('this username is already taken');
+             </script>";
+
     } else {
-        if ($password !== $confirm_password) {
-            echo "<script>
-                alert('password doesnt match')
-            </script>";
-        } else {
+        if($password !== $confirmpassword) {
+           echo " <script>
+                    alert('the passwords doesn't match');
+                  </script>";
+        }else{
             $encrypted_password = password_hash($password, PASSWORD_DEFAULT);
-            $insert = "INSERT INTO users(username,password) VALUES('$username','$encrypted_password')";
-            if (mysqli_query($link, $insert)) {
+            $insert = "INSERT INTO users (username,email, password) VALUES ('$username', '$email', '$encrypted_password')";
+            if(mysqli_query($link, $insert)) {
                 echo "<script>
-                alert('user registered successfully')
-            </script>";
+                        alert('Registration successful');
+                      </script>";
+            header("location: login.php");
             } else {
                 echo "<script>
-                alert('failed to register the user')
-            </script>";
+                        alert('Registration failed. Please try again.');
+                      </script>";
             }
         }
     }
+
 }
 
 
@@ -44,11 +50,8 @@ if (isset($_POST['submit'])) {
 
 
 
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,20 +62,17 @@ if (isset($_POST['submit'])) {
             min-height: 100vh;
             background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
         }
-
         .register-card {
             border-radius: 1.5rem;
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
-            background: rgba(255, 255, 255, 0.97);
+            background: rgba(255,255,255,0.97);
         }
-
         .brand-icon {
             font-size: 3rem;
             color: #185a9d;
         }
     </style>
 </head>
-
 <body>
     <div class="container d-flex align-items-center justify-content-center min-vh-100">
         <div class="register-card card p-5 w-100" style="max-width: 420px;">
@@ -80,20 +80,28 @@ if (isset($_POST['submit'])) {
                 <i class="bi bi-person-plus brand-icon"></i>
                 <h2 class="fw-bold mt-2">Create Account</h2>
             </div>
-            <form id="registerForm" novalidate action="" method="post">
+            <form id="registerForm" novalidate action ="" method="POST">
                 <div class="mb-3">
-                    <label for="registerEmail" class="form-label">Email or Username</label>
+                    <label for="registerUsername" class="form-label">Username</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                        <input type="text" class="form-control" id="registerEmail" placeholder="Ente username" name="username" required>
+                        <input type="text" class="form-control" id="registerUsername" placeholder="Enter Username" name="username"required>
                         <div class="invalid-feedback">Please enter your username.</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="registerEmail" class="form-label">E-Mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="text" class="form-control" id="registerEmail" placeholder="Enter E-Mail" name="email"required>
+                        <div class="invalid-feedback">Please enter your e-mail.</div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="registerPassword" class="form-label">Password</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input type="password" class="form-control" id="registerPassword" placeholder="Password" name="password" required>
+                        <input type="password" class="form-control" id="registerPassword" placeholder="Password" name="password"required>
                         <div class="invalid-feedback">Please enter a password.</div>
                     </div>
                 </div>
@@ -101,7 +109,7 @@ if (isset($_POST['submit'])) {
                     <label for="registerConfirmPassword" class="form-label">Confirm Password</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                        <input type="password" class="form-control" id="registerConfirmPassword" placeholder="Confirm Password" name="confirmPassword" required>
+                        <input type="password" class="form-control" id="registerConfirmPassword" placeholder="Confirm Password" name="confirmPassword"required>
                         <div class="invalid-feedback" id="confirmPasswordFeedback">Passwords must match.</div>
                     </div>
                 </div>

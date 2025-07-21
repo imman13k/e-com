@@ -1,37 +1,58 @@
-<?php
+<?php 
+//require config
+
+
+//use the isset
+
+//get the values of username and password
+
+
+//fetch the values from the db using msql assoc method
+
+
+//verify the password
+
 
 require_once "./config.php";
-
 session_start();
 
-if(isset($_POST['submit'])){
+if(!empty($_SESSION['id'])){
+    header("location: index.php");
+}
+
+if(isset($_POST['submit'])) {
+
     $username = $_POST['username'];
     $password = $_POST['password'];
 
     $select = "SELECT * FROM users WHERE username = '$username'";
-    
-    $result = mysqli_query($link,$select);
-
+    $result = mysqli_query($link, $select);
     $row = mysqli_fetch_assoc($result);
-
-    if(mysqli_num_rows($result) > 0){ 
-
-        if(password_verify($password,$row['password'])){
+    if(mysqli_num_rows($result) > 0) {
+        if(password_verify($password,$row['password'])) {
             $_SESSION['logged_in'] = true;
+            $_SESSION['id'] = $row['id'];
             $_SESSION['username'] = $row['username'];
-            header('Location:index.php');
-        }else{
+            
+            header("location: index.php");
+        } else {
             echo "<script>
-                alert('password is incorrect')
-                </script>";
+                    alert('Incorrect password');
+                  </script>";
         }
     }else{
         echo "<script>
-                alert('this user is not registered')
-                </script>";
+                alert('this username is not registered');
+              </script>";
     }
+
 }
+
 ?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,28 +83,28 @@ if(isset($_POST['submit'])){
                 <i class="bi bi-bag-check brand-icon"></i>
                 <h2 class="fw-bold mt-2">Sign In</h2>
             </div>
-            <form action ="" method = "post">
+            <form action="" method="POST">
                 <div class="mb-3">
                     <label for="loginEmail" class="form-label">Email or Username</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-person"></i></span>
-                        <input type="text" class="form-control" id="loginEmail" placeholder="Enter email or username" name = "username" required>
+                        <input type="text" class="form-control" id="loginEmail" placeholder="Enter email or username" name="username" required>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="loginPassword" class="form-label">Password</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input type="password" class="form-control" id="loginPassword" placeholder="Password" name = "password" required>
+                        <input type="password" class="form-control" id="loginPassword" placeholder="Password" name="password" required>
                     </div>
                 </div>
-                <button type="submit" name = "submit" class="btn btn-primary w-100 py-2 mt-2">Login</button>
+                <button type="submit" name="submit" class="btn btn-primary w-100 py-2 mt-2">Login</button>
             </form>
             <div class="mt-3 text-center">
                 <a href="register.php" class="text-decoration-none">Don't have an account? <span class="fw-semibold text-primary">Register</span></a>
             </div>
         </div>
     </div>
-    <?php include "./includes/header.php" ?>
+    <?php include "./includes/footer.php" ?>
 </body>
-</html> 
+</html>
